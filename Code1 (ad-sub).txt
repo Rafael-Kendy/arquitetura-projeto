@@ -1,0 +1,16 @@
+;A = A + ( X - Y )
+;A = 10 + ( 5 - 3)
+
+;(X-Y) = 2
+LDX #05     ;carrega 5 em X
+LDY #03     ;carrega 3 em Y
+CLC         ;limpa o flag carry pra nao interferir no resultado
+
+LDA X       ;carrega o valor de X em A
+SBC Y       ;subtrai o valor de Y em A (X=X-Y, lembrando que X=A)
+STA X       ;salva o valor de A em X
+
+;A = A + ( X - Y )
+LDA #10     ;carrega 10 em A
+ADC X       ;A + (X-Y)
+
