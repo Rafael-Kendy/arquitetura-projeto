@@ -1,6 +1,17 @@
-https://www.cs.otago.ac.nz/cosc243/pdf/6502Poster.pdf
-http://www.emulator101.com/6502-addressing-modes.html
-https://wiki.cdot.senecacollege.ca/wiki/6502_Addressing_Modes
-https://www.masswerk.at/6502/6502_instruction_set.html
-https://github.com/LukeMcCann/Atari_AssemblyProjects
-https://en.wikibooks.org/wiki/6502_Assembly
+OPCodes e instruções:
+  https://www.cs.otago.ac.nz/cosc243/pdf/6502Poster.pdf
+  https://www.masswerk.at/6502/6502_instruction_set.html
+  
+Modos de endereçamento:
+  http://www.emulator101.com/6502-addressing-modes.html
+  https://wiki.cdot.senecacollege.ca/wiki/6502_Addressing_Modes
+
+Geral:
+  https://github.com/LukeMcCann/Atari_AssemblyProjects
+  https://en.wikibooks.org/wiki/6502_Assembly
+  https://dwheeler.com/6502/oneelkruns/asm1step.html
+  
+Tutoriais:
+  https://skilldrick.github.io/easy6502/
+  https://codeburst.io/an-introduction-to-6502-assembly-and-low-level-programming-7c11fa6b9cb9
+
