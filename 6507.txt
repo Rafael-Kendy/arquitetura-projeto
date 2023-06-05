@@ -1,5 +1,5 @@
 - 6507 é um 6502 modificado, então suponho que a info pro 6502 tbm vale pra ele.
-- Números com $ na frente são hexadecimais, # são literais (imediatos) e % .
+- Números com $ na frente são hexadecimais e # são literais (imediatos).
 - Cada registrador guarda 1 byte.
 - Todas as intruções recebem 0 ou 1 argumento.
 - ; é o comentário.
@@ -31,23 +31,23 @@ Flags (cada um é só 1 bit):
 Intruções:
     LOAD & STORE:
         LDA (Load accumulator). LDX e LDY - Carrega para X/Y.
-            > LDA #$01 ;Carrega o valor 01 em A
+            > LDA #$01      ;Carrega o valor 01 em A
         STA (Store accumulator). STX e STY - Store para X/Y.
-            > STA $0123 ;Salva o valor de A no endereço $0123
+            > STA $0123     ;Salva o valor de A no endereço $0123
 
     OPERAÇÕES ARITMÉTICAS:
         ADC (Add with carry). SBC (Subtract with carry).
-            > ADC #$c4 - Adiciona c4(hex) em A;
+            > ADC #$c4      ;Adiciona c4(hex) em A
     
     INCREMENTO E DECREMENTO:
         INC (Increment a memory location). INX e INY.
-            > INX ;Aumenta X em 1
+            > INX           ;Aumenta X em 1
         DEC (Decrement a memory location). DEX e DEY.
-            > DEX ;Diminui X em 1
+            > DEX           ;Diminui X em 1
     
     TRANSFERENCIA DE REGISTRADOR:
         TAX e TAY (Transfer accumulator to X/Y). TXA e TYA(Transfer X/Y to accumulator).
-            > TAX ;Transfera o valor de A para X
+            > TAX           ;Transfera o valor de A para X
 
     LÓGICA:
         AND (AND).
@@ -56,23 +56,30 @@ Intruções:
 
     COMPARAÇÃO DE BITS:
         CMP (Compare accumulator). CPX e CPY (Compare X/Y register).
-            > CPY #$03 ;Compara Y com 03(hex)
+            > CPY #$03      ;Compara Y com 03(hex)
         BIT (Bit test).
 
     SHIFT:
         ASL (Arithmetic shift left).
+            >ASL N1         :shifta o N1 pra esquerda e manda o bit
+                            ;"perdido" pra C
         LSR (Logical shift right).
-        ROL e ROR (Rotate left/right).
+            >LSR NUM        ;shifta o num pra direita e manda o bit
+                            ;"perdido" pra C
+        ROL e ROR (Rotate left/right): "Recupera" o bit perdido nos shift.
+            >ROL N2         ;salva o bit perdido em N2
 
     JUMP & BRANCH:
         JMP (Jump to another location).
         BCC (Branch if carry flag clear).
+            > BCC vaila     ;Se C=0, pula
         BCS (Branch if carry flag set).
-        BEQ (Branch if zero flag set).
-            > BEQ main ;Se Z tiver setado faz o pulo
-        BMI (Branch if negative flag set).
+            > BCS main      ;Se C=1, pula
         BNE (Branch if zero flag clear).
-            > BNE for ;Se Z tiver limpo faz o pulo
+            > BNE for       ;Se Z=0, pula
+        BEQ (Branch if zero flag set).
+            > BEQ main      ;Se Z=1, pula
+        BMI (Branch if negative flag set).
         BPL (Branch if negative flag clear).
         BVC (Branch if overflow flag clear).
         BVS (Branch if overflow flag set).
