@@ -1,5 +1,5 @@
 - 6507 é um 6502 modificado, então suponho que a info pro 6502 tbm vale pra ele.
-- Números com $ na frente são hexadecimais e # são literais (imediatos).
+- Números com $ na frente são hexadecimais, # são literais (imediatos) e % .
 - Cada registrador guarda 1 byte.
 - Todas as intruções recebem 0 ou 1 argumento.
 - ; é o comentário.
