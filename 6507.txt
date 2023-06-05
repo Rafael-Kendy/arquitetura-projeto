@@ -1,0 +1,101 @@
+- 6507 é um 6502 modificado, então suponho que a info pro 6502 tbm vale pra ele.
+- Números com $ na frente são hexadecimais e # são literais (imediatos).
+- Cada registrador guarda 1 byte.
+- Todas as intruções recebem 0 ou 1 argumento.
+- ; é o comentário.
+- Label é igual do mips.
+- Memória vai de $0000 até $1FFF
+
+
+
+
+Registradores:
+    A - Acumulador, é usado na maioria das operações, sem precisar buscar outros registradores na memória;
+    X, Y - Registradores de index;
+    PC - Program counter;
+    S - Stack pointer, index onde o próximo elemento vai ser escrito no stack(vai de $0100 até $01FF);
+    P - Status do processador;
+
+
+
+Flags (cada um é só 1 bit):
+    C - Carry, recebe o bit carry das adições, pode ser setada or limpa com SEC e CLC.
+    Z - Zero, recebe o resultado das instruções, no CMP vai setar de os 2 forem iguais.
+    I - Inrettupt disable.
+    D - Decimal.
+    V - Overflow.
+    N - Negativo, recebe o sinal da maioria das intruções que tem um valor como resultado.
+
+
+
+Intruções:
+    LOAD & STORE:
+        LDA (Load accumulator). LDX e LDY - Carrega para X/Y.
+            > LDA #$01 ;Carrega o valor 01 em A
+        STA (Store accumulator). STX e STY - Store para X/Y.
+            > STA $0123 ;Salva o valor de A no endereço $0123
+
+    OPERAÇÕES ARITMÉTICAS:
+        ADC (Add with carry). SBC (Subtract with carry).
+            > ADC #$c4 - Adiciona c4(hex) em A;
+    
+    INCREMENTO E DECREMENTO:
+        INC (Increment a memory location). INX e INY.
+            > INX ;Aumenta X em 1
+        DEC (Decrement a memory location). DEX e DEY.
+            > DEX ;Diminui X em 1
+    
+    TRANSFERENCIA DE REGISTRADOR:
+        TAX e TAY (Transfer accumulator to X/Y). TXA e TYA(Transfer X/Y to accumulator).
+            > TAX ;Transfera o valor de A para X
+
+    LÓGICA:
+        AND (AND).
+        EOR (Exclusive OR).
+        ORA (Inclusive OR).
+
+    COMPARAÇÃO DE BITS:
+        CMP (Compare accumulator). CPX e CPY (Compare X/Y register).
+            > CPY #$03 ;Compara Y com 03(hex)
+        BIT (Bit test).
+
+    SHIFT:
+        ASL (Arithmetic shift left).
+        LSR (Logical shift right).
+        ROL e ROR (Rotate left/right).
+
+    JUMP & BRANCH:
+        JMP (Jump to another location).
+        BCC (Branch if carry flag clear).
+        BCS (Branch if carry flag set).
+        BEQ (Branch if zero flag set).
+            > BEQ main ;Se Z tiver setado faz o pulo
+        BMI (Branch if negative flag set).
+        BNE (Branch if zero flag clear).
+            > BNE for ;Se Z tiver limpo faz o pulo
+        BPL (Branch if negative flag clear).
+        BVC (Branch if overflow flag clear).
+        BVS (Branch if overflow flag set).
+
+    STACK:
+        TSX (Transfer stack pointer to X). TXS (Transfer X to stack pointer).
+        PHA (Push accumulator on stack).
+        PLA (Pull accumulator from stack).
+        PLP (Pull processor status from stack).
+
+    STATUS FLAG:
+        CLC (Clear carry flag).
+        CLD (Clear decimal mode flag).
+        CLI (Clear interrupt disable flag).
+        CLV (Clear overflow flag).
+        SEC (Set carry flag).
+        SED (Set decimal mode flag).
+        SEI (Set interrupt disable flag).
+
+    SUBROTINA & INTERROPER:
+        JSR (Jump to a subroutine).
+        RTS (Return from subroutine).
+        BRK (Force an interrupt).
+            > BRK ;Fim do programa
+        RTI (Return from Interrupt).
+        NOP (No Operation).
