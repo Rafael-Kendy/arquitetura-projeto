@@ -2,7 +2,7 @@
     ;O resultado da maioria das operacoes fica automaticamente salvo no registrador
     ;acumulador(A), ele tambem eh usado como argumento da maioria das operacoes.
 
-INICIO  RESUL  =$0400
+INICIO  RESUL  =$50
         LDA     #0      ;carrega 0 A
         STA     RESUL   ;limpa o endereco
         CLC             ;limpa a flag carry pra nao interferir na conta
@@ -12,3 +12,5 @@ INICIO  RESUL  =$0400
         ADC     #10     ;adiciona o valor de A em 10 (A=A+10)
 
         STA     RESUL   ;guarda o valor de A em RESUL
+
+        BRK             ;encerra o programa
