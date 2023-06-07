@@ -1,0 +1,64 @@
+// Registradores do processador 6502
+typedef struct {
+    unsigned char A;   // Acumulador
+    unsigned char X;   // Registrador X
+    unsigned char Y;   // Registrador Y
+    unsigned char SP;  // Ponteiro de Pilha
+    unsigned short PC; // Contador de Programa
+} Registers;
+
+// Flags do processador 6502
+typedef struct {
+    unsigned char C:1;  // Carry
+    unsigned char Z:1;  // Zero
+    unsigned char I:1;  // Desabilitar Interrupções
+    unsigned char D:1;  // Modo Decimal
+    unsigned char B:1;  // Break
+    unsigned char V:1;  // Overflow
+    unsigned char N:1;  // Negativo
+} Flags;
+
+// Memória do sistema
+#define MEM_SIZE 65536  // Tamanho máximo da memória
+typedef unsigned char Memory[MEM_SIZE];
+
+// Estado do processador 6502
+typedef struct {
+    Registers reg;     // Registradores
+    Flags flags;       // Flags
+    Memory memory;     // Memória
+} CPUState;
+--------------------------------------------------------------
+void handleBranchInstruction(CPUState *state, unsigned char opcode) {
+    signed char offset = (signed char)state->memory[state->reg.PC + 1]; // Lê o deslocamento como um valor de 8 bits com sinal
+    unsigned short newPC = state->reg.PC + 2 + offset; // Calcula o novo endereço de destino
+    
+    // Verifica a condição de salto
+    switch (opcode) {
+        case 0x10: // BPL - Branch Positive
+            if (!state->flags.N) {
+                state->reg.PC = newPC;
+            }
+            break;
+            
+        case 0x30: // BMI - Branch Negative
+            if (state->flags.N) {
+                state->reg.PC = newPC;
+            }
+            break;
+            
+        case 0x50: // BVC - Branch Overflow Clear
+            if (!state->flags.V) {
+                state->reg.PC = newPC;
+            }
+            break;
+            
+        // Mais instruções de branch...
+            
+        default:
+            printf("Opcode de branch desconhecido: 0x%02X\n", opcode);
+            break;
+    }
+    
+    state->reg.PC += 2; // Incrementa o contador de programa
+}
