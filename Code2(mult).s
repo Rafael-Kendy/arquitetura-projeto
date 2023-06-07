@@ -8,8 +8,8 @@
     ;e 14 o multiplicador(N2)
 
 ;Faz com que essas variaveis recebam enderecos de memoria
-MEM     N1     =$0400
-        N2     =$0401
+MEM     N1     =$0400   ;endereco para o multiplicando
+        N2     =$0401   ;endereco para o multiplicador
         TEMP   =$0402   ;temporario, para guarda o bit depois do ASL
         RESUL1 =$0403   ;onde a "maior" parte do resultado vai ser guardada
         RESUL2 =$0404   ;onde a "menor" parte do resultado vai ser guardada
@@ -48,3 +48,5 @@ PASSA   ASL     N1      ;faz o shift do multiplicando pra esquerda e manda o bit
         DEX             ;diminui X em 1
         BNE     MUL     ;volta pro MUL se a flag zero(Z)=0, Z vai ser setado pra 1 quando
                             ;o DEX resultar em X=0
+
+        BRK             ;encerra
