@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define SIZE 64000//8kb
 #define RESUL "$50"
@@ -33,6 +34,46 @@ typedef struct {
     Flags flags;//Flags
 }EstadoCPU;
 
+//ROL============================================================================================================================
+int RotateLeft(int num, EstadoCPU *CPU){
+	int vet_bin[8];
+	int i=0, k=6;
+
+	while(num > 0){
+		vet_bin[i] = num % 2;
+		i++;
+		num = num / 2;
+	}//while pega o resto da divisão de num por 2
+
+    if(i!=7){
+        for(int j=i; j<=7; j++){
+            vet_bin[j]=0;
+        }//for
+    }//if para preencher o resto do vetor com 0
+
+    if(vet_bin[7]==1){
+        CPU->flags.C=1;
+    }else{
+        CPU->flags.C=0;
+    }//seta o carry
+
+    for(i=7; i>=0; i--){
+        if(i==0){ k=7; }
+        vet_bin[i]=vet_bin[k];
+        k=i-2;
+    }//faz a rotacao dos bits
+
+    vet_bin[0]=CPU->flags.C;
+
+    int decimal = 0;
+
+    for (int i=7; i>=0; i--) {
+        decimal = (decimal << 1) + vet_bin[i];
+    }//volta pra decimal
+
+    return decimal;
+}//RotateLeft
+
 //main===========================================================================================================================
 int main(){
     int inst_lidas=0;//Qtde de instrucoes lidas
@@ -43,7 +84,7 @@ int main(){
     unsigned char temp[4];
 
 //Abertura do arquivo=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-    printf("Qual codigo deseja visualizar? 1-, 2-, 3-: ");
+    printf("Qual codigo deseja visualizar? 1-Simples, 2-Medio, 3-Complexo: ");
     scanf("%i", &menu);
     setbuf(stdin, NULL);
     if(menu!=1 && menu!=2 && menu!=3){
@@ -56,10 +97,10 @@ int main(){
 
     if(menu==1){
         nome_arq="Code1.dat";
-        msg="Explicacao codigo 1.\n";
+        msg="No codigo escolhido, o valor 5 e subtraido por 3, resultando em 2. Em seguida, 10 e adicionado a 2, resultando em 12. O valor final de 12 e armazenado na variavel RESUL, no endereco $50.\n";
     }else if(menu==2){
         nome_arq="Code2.dat";
-        msg="Explicacao codigo 2.\n";
+        msg="No codigo escolhido, faremos uma multiplicacao de dois numeros, 11(N1) e 14(14), o resultado sera 154 e ficara salvo em RESUL1($54) e RESUL2($55), lembrando que nao existe uma intrucao direta para multiplicacao nessa arquitetura.\n";
     }else if(menu==3){
         nome_arq="Code3.dat";
         msg="Explicacao codigo 3.\n";
@@ -140,6 +181,10 @@ int main(){
                         CPU.reg.A=c2_resul1;
                         printf("A=%i(%s).\n", CPU.reg.A, RESUL1);
                         break;
+                    case 0x01010101:
+                        CPU.reg.A=c2_resul2;
+                        printf("A=%i(%s).\n", CPU.reg.A, RESUL2);
+                        break;
                 }//switch variavel
 
                 IC++;
@@ -170,23 +215,23 @@ int main(){
                         break;
                     case 0x01010001:
                         c2_n1=CPU.reg.A;
-                        printf("%s=%i.\n", N1, c1_resul);
+                        printf("%s=%i.\n", N1, c2_n1);
                         break;
                     case 0x01010010:
                         c2_n2=CPU.reg.A;
-                        printf("%s=%i.\n", N2, c1_resul);
+                        printf("%s=%i.\n", N2, c2_n2);
                         break;
                     case 0x01010011:
                         c2_temp=CPU.reg.A;
-                        printf("%s=%i.\n", TEMP, c1_resul);
+                        printf("%s=%i.\n", TEMP, c2_temp);
                         break;
                     case 0x01010100:
                         c2_resul1=CPU.reg.A;
-                        printf("%s=%i.\n", RESUL1, c1_resul);
+                        printf("%s=%i.\n", RESUL1, c2_resul1);
                         break;
                     case 0x01010101:
                         c2_resul2=CPU.reg.A;
-                        printf("%s=%i.\n", RESUL2, c1_resul);
+                        printf("%s=%i.\n", RESUL2, c2_resul2);
                         break;
                 }//switch variavel
 
@@ -228,11 +273,46 @@ int main(){
                 switch (variavel){
                     case 0x01010001:
                         CPU.reg.A=CPU.reg.A+c2_n1;
-                        printf("A=A+%i(%s) -> A=%i.\n", CPU.reg.A, c2_n1, N1);
+                        printf("A=A+%i(%s) -> A=%i.\n", CPU.reg.A, N1, c2_n1);
                         break;
                     case 0x01010011:
-                        CPU.reg.A=CPU.reg.A+c2_n1;
-                        printf("A=A+%i(%s) -> A=%i.\n", CPU.reg.A, c2_n1, N1);
+                        CPU.reg.A=CPU.reg.A+c2_temp;
+                        printf("A=A+%i(%s) -> A=%i.\n", CPU.reg.A, c2_temp, TEMP);
+                        break;
+                }//switch variavel
+
+                IC++;
+                break;
+        //DEX-------------------------------------------------------------------
+            case 0x11001010:
+                printf("\tDEX: ");
+                CPU.reg.X--;
+                printf("X=%i.\n", CPU.reg.X);
+                if(CPU.reg.X==0){ CPU.flags.Z=1; }
+                break;
+        //ROL-------------------------------------------------------------------
+            case 0x00100110:
+                variavel=ram[IC];
+                printf("\tROL(%08X) com endereco zero page(%08X): ", opcode, variavel);
+
+                switch (variavel){
+                    case 0x01010011:
+                        c2_temp=RotateLeft(c2_temp, &CPU);
+                        printf("%s=%i\n", TEMP, c2_temp);
+                        break;
+                }//switch variavel
+
+                IC++;
+                break;
+        //ASL-------------------------------------------------------------------
+            case 0x00000110:
+                variavel=ram[IC];
+                printf("\tALS(%08X) com endereco zero page(%08X): ", opcode, variavel);
+
+                switch (variavel){
+                    case 0x01010001:
+                        c2_n1=c2_n1*2;
+                        printf("%s=%i.\n", N1, c2_n1);
                         break;
                 }//switch variavel
 
@@ -245,28 +325,57 @@ int main(){
 
                 switch (variavel){
                     case 0x01010010:
-                        c2_n2="ARRUMA AKI Ó";---------------------------------------------------
+                        if(c2_n2%2==1){
+                            CPU.flags.C=1;
+                        }else{
+                            CPU.flags.C=0;
+                        }//if carry "perdido"
+                        c2_n2=c2_n2/2;
                         printf("%s=%i.\n", N2, c2_n2);
                         break;
                 }//switch variavel
 
                 IC++;
                 break;
+        //BNE-------------------------------------------------------------------
+            case 0x11010000:
+                variavel=ram[IC];
+                printf("\tBNE(%08X) com para o endereco relativo(%08X): ", opcode, variavel);
+
+                switch (variavel){
+                    case 0x11101111:
+                        if(CPU.flags.Z==0){
+                            CPU.reg.PC--;
+                            printf("Branch realizado - [PC]%i->%i.\n", CPU.reg.PC, 9);
+                            CPU.reg.PC=9;
+                            IC=18;
+                        }else{
+                            printf("Brach nao realizado.\n");
+                            IC++;
+                        }//if
+                        break;
+                }//switch variavel
+
+                break;
         //BCC-------------------------------------------------------------------
             case 0x10010000:
-                int novo_end;
                 variavel=ram[IC];
                 printf("\tBCC(%08X) com para o endereco relativo(%08X): ", opcode, variavel);
 
                 switch (variavel){
-                    case 0x01010010:
-                        novo_end=35;
-                        printf("%i=%i.\n", PC, novo_end);
+                    case 0x00000011:
+                        if(CPU.flags.C==0){
+                            CPU.reg.PC--;
+                            printf("Branch realizado - [PC]%i->%i.\n", CPU.reg.PC, 18);
+                            CPU.reg.PC=18;
+                            IC=35;
+                        }else{
+                            printf("Brach nao realizado.\n");
+                            IC++;
+                        }//if
                         break;
                 }//switch variavel
 
-                CPU.reg.PC=novo_end;
-                IC=novo_end;
                 break;
         //CLC-------------------------------------------------------------------
             case 0x00011000:
@@ -276,6 +385,11 @@ int main(){
         //BRK-------------------------------------------------------------------
             case 0x00000000:
                 printf("\tBRK(%08X).\n", opcode);
+                if(strcasecmp(nome_arq, "Code1.dat")==0){
+                    printf("\tRESUL(%s)=%i.\n", RESUL, c1_resul);
+                }else if(strcasecmp(nome_arq, "Code2.dat")==0){
+                    printf("\tRESUL1(%s)=%i; RESUL2(%s)=%i.\n", RESUL1, c2_resul1, RESUL2, c2_resul2);
+                }//if print resultado
                 break;
             }//switch opcode
         //----------------------------------------------------------------------
