@@ -8,11 +8,11 @@
     ;e 14 o multiplicador(N2)
 
 ;Faz com que essas variaveis recebam enderecos de memoria
-MEM     N1     =$0400   ;endereco para o multiplicando
-        N2     =$0401   ;endereco para o multiplicador
-        TEMP   =$0402   ;temporario, para guarda o bit depois do ASL
-        RESUL1 =$0403   ;onde a "maior" parte do resultado vai ser guardada
-        RESUL2 =$0404   ;onde a "menor" parte do resultado vai ser guardada
+MEM     N1     =$51   ;endereco para o multiplicando
+        N2     =$52   ;endereco para o multiplicador
+        TEMP   =$53   ;temporario, para guarda o bit depois do ASL
+        RESUL1 =$54   ;onde a "maior" parte do resultado vai ser guardada
+        RESUL2 =$55   ;onde a "menor" parte do resultado vai ser guardada
                         ;o resultado eh separado em 2 para caso de conta com 2 valores
                             ;de 8 bits, resultando em algo com 16 bits
 ;Exemplo do resul1 e resul2: para o numero 219 = 11011011 em binario, resul1 guardaria
