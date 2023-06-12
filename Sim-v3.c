@@ -87,7 +87,7 @@ int main(){
     unsigned char temp[4];
 
 //Abertura do arquivo=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-    printf("Qual codigo deseja visualizar? 1-Simples, 2-Medio, 3-Complexo: ");
+    printf("Qual codigo deseja visualizar? 1-Adicao/Subtracao, 2-Multiplicacao, 3-Fatorial: ");
     scanf("%i", &menu);
     setbuf(stdin, NULL);
     if(menu!=1 && menu!=2 && menu!=3){
