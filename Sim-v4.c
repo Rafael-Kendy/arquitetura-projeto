@@ -1,3 +1,6 @@
+/*
+ * PROJETO MINI SIMULADOR: Rafael Kendy(2478544) e Hugo Massaro(2383918) - Processador 6507
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
